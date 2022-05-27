@@ -1,0 +1,4 @@
+config:
+  aws:region: us-west-2
+  targetDomain: dev-env.salsitatech.com
+  
