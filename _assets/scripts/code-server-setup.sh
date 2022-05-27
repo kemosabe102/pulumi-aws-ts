@@ -1,8 +1,5 @@
 # Original file: https://github.com/chilcano/aws-cdk-examples/blob/main/code-server-ec2/_assets/scripts/cloud_devops_tools.sh
 
-printf "==> Installing utilities and CLIs: git, awscli, curl, jq, unzip, software-properties-common (apt-add-repository) and sudo \n"
-apt update
-DEBIAN_FRONTEND=noninteractive apt install -y git awscli curl jq unzip software-properties-common sudo apt-transport-https
 
 printf "==> Installing tools to allow SSH into code-server on VS Code \n"
 DEBIAN_FRONTEND=noninteractive apt install wget unzip openssh-server

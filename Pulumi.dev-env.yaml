@@ -1,4 +1,14 @@
 config:
   aws:region: us-west-2
-  targetDomain: dev-env.salsitatech.com
-  
+  pulumi-aws-ts:anthonyPip: 97.126.37.214/32
+  pulumi-aws-ts:devSubnetName: devSubnet
+  pulumi-aws-ts:internetGatewayName: dev-gw
+  pulumi-aws-ts:pathToCaddyfile: _assets/caddyfile/Caddyfile.dev01
+  pulumi-aws-ts:pathToSetupScript: _assets/scripts/code-server-setup.sh
+  pulumi-aws-ts:secGrpNameDev: dev-env-secgrp
+  pulumi-aws-ts:subnetCidrBlock: 172.20.0.0/24
+  pulumi-aws-ts:targetDomain: dev01.salsitatech.com
+  pulumi-aws-ts:vpcCidrBlock: 172.20.0.0/16
+  pulumi-aws-ts:vpcNameDev: development
+  pulumi-aws-ts:webDev01ServerElasticIpName: web-dev-server-01-eip
+  pulumi-aws-ts:webDev01ServerName: web-dev-server-01

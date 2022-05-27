@@ -31,8 +31,8 @@ export function getDomainAndSubdomain(domain: string): { subdomain: string, pare
     };
 }
 
-// Creates a new Route53 DNS CNAME record
-export function createCnameRecord(
+// Creates a new Route53 DNS A record
+export function createARecord(
     targetDomain: string, eip: aws.ec2.Eip): aws.route53.Record {
     const domainParts = getDomainAndSubdomain(targetDomain);
     const hostedZoneId = aws.route53.getZone({ name: domainParts.parentDomain }, { async: true }).then(zone => zone.zoneId);
@@ -41,8 +41,8 @@ export function createCnameRecord(
         {
             name: domainParts.subdomain,
             zoneId: hostedZoneId,
-            type: "CNAME",
+            type: "A",
             ttl: 300,
-            records: [eip.domainName],
+            records: [eip.publicIp],
         });
 }
