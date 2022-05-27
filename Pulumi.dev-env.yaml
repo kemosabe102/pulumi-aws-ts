@@ -3,8 +3,9 @@ config:
   pulumi-aws-ts:anthonyPip: 97.126.37.214/32
   pulumi-aws-ts:devSubnetName: devSubnet
   pulumi-aws-ts:internetGatewayName: dev-gw
+  pulumi-aws-ts:keyName: linuxSSHKeys
   pulumi-aws-ts:pathToCaddyfile: _assets/caddyfile/Caddyfile.dev01
-  pulumi-aws-ts:pathToSetupScript: _assets/scripts/code-server-setup.sh
+  pulumi-aws-ts:pathToSetupScript: _assets/scripts/launch-code-server.sh
   pulumi-aws-ts:secGrpNameDev: dev-env-secgrp
   pulumi-aws-ts:subnetCidrBlock: 172.20.0.0/24
   pulumi-aws-ts:targetDomain: dev01.salsitatech.com

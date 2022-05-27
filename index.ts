@@ -49,11 +49,16 @@ const group = new aws.ec2.SecurityGroup(secGrpNameDev, {
         {protocol: "tcp", fromPort: 80, toPort: 80, cidrBlocks: ["0.0.0.0/0"],},
         {protocol: "tcp", fromPort: 443, toPort: 443, cidrBlocks: [anthonyPip],},
     ],
+    vpcId: _development.id,
 });
 
-// Create SSH key pair
+// Create SSH key pair and upload it to AWS.
 // Amazon EC2 supports ED25519 and 2048-bit SSH-2 RSA keys for Linux instances.
 const sshKey = new tls.PrivateKey(keyName, { algorithm: "ED25519" });
+new aws.ec2.KeyPair(keyName, {
+    publicKey: sshKey.publicKeyOpenssh,
+    keyName: keyName,
+});
 
 // startup script for the instance
 const userData = readFileSync(pathToSetupScript, 'utf-8');
@@ -61,7 +66,7 @@ const userData = readFileSync(pathToSetupScript, 'utf-8');
 // Get the id for the latest Amazon Linux AMI
 const ami = aws.ec2.getAmi({
     filters: [
-        {name: "name", values: ["amzn2-ami-hvm-x86_64-gp2"]},
+        {name: "name", values: ["amzn2-ami-hvm-*-x86_64-gp2"]},
     ],
     owners: ["137112412989"], // Amazon
     mostRecent: true,
@@ -97,15 +102,19 @@ const connection: command.types.input.remote.ConnectionArgs = {
 // Create Route 53 record for the new EC2 instance
 const aRecord = createARecord(targetDomain, eip);
 
-// Copy a config file to our server.
+// Copy a config file to our server and restart Caddy
 const changeToken = getFileHash(pathToCaddyfile);
-new command.remote.CopyFile("CaddyfileConfig", {
+const copyCaddyFile = new command.remote.CopyFile("CaddyfileConfig", {
     triggers: [changeToken],
     connection,
     localPath: pathToCaddyfile,
-    remotePath: "/etc/caddy/Caddyfile.dev01",
+    remotePath: "/etc/caddy/Caddyfile",
 }, {dependsOn: webDevServer});
+new command.remote.Command("RestartCaddy", {
+    triggers: [changeToken],
+    connection,
+    stdin: "sudo systemctl restart caddy",
+}, {dependsOn: copyCaddyFile});
 
-export const publicIp = webDevServer.publicIp;
-export const publicHostName = webDevServer.publicDns;
-export const dnsName = aRecord.name;
+export const publicIp = eip.publicIp;
+export const publicHostName = targetDomain;

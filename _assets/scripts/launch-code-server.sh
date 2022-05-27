@@ -46,14 +46,8 @@ CADDYFILE='/etc/caddy/Caddyfile'
 if [ -f "${CADDYFILE}" ]; then
     sudo rm "${CADDYFILE}"
 fi
-# Wait for new caddyfile to be copied in Pulumi
-while [ ! -f /etc/caddy/Caddyfile.dev01 ]; do
-    sleep 1
-done
-sudo cp /etc/caddy/Caddyfile.dev01 "${CADDYFILE}"
 
 # Reload Caddy and Coder
 sudo systemctl stop code-server
 sudo systemctl start code-server
 sudo systemctl stop caddy
-sudo systemctl start caddy
